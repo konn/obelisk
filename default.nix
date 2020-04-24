@@ -84,8 +84,8 @@ in rec {
     '' else ''
       export JAVA_OPTS='-Xmx16384M -XX:-UseGCOverheadLimit'
       export DEFAULT_JVM_OPTS='-Xmx16384M -XX:-UseGCOverheadLimit'
-      export extraFlagsArray=(-Xmx16384M -XX:-UseGCOverheadLimit)
-      ${pkgs.closurecompiler}/bin/closure-compiler --externs "${reflex-platform.ghcjsExternsJs}" -O ${optimizationLevel} --jscomp_warning=checkVars --create_source_map="all.js.map" --source_map_format=V3 --js_output_file="all.js" all.unminified.js
+      extraFlagsArray=(-Xmx16384M -XX:-UseGCOverheadLimit) \
+      ${pkgs.openjdk}/bin/java -XX:-UseGCOverhadLimit -Xmx16834M -jar ${pkgs.closurecompiler}/share/java/closure-compiler-v20190215.jar --externs "${reflex-platform.ghcjsExternsJs}" -O ${optimizationLevel} --jscomp_warning=checkVars --create_source_map="all.js.map" --source_map_format=V3 --js_output_file="all.js" all.unminified.js
       echo "//# sourceMappingURL=all.js.map" >> all.js
     ''}
   '';
