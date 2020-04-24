@@ -74,6 +74,7 @@ in rec {
   '';
 
   compressedJs = frontend: optimizationLevel: pkgs.runCommand "compressedJs" {} ''
+    echo "OVERRIDEN"
     mkdir $out
     cd $out
     # TODO profiling + static shouldn't break and need an ad-hoc workaround like that
@@ -81,7 +82,9 @@ in rec {
     ${if optimizationLevel == null then ''
       ln -s all.unminified.js all.js
     '' else ''
-      JAVA_OPTS="-Xmx4096M -XX:-UseGCOverheadLimit" ${pkgs.closurecompiler}/bin/closure-compiler --externs "${reflex-platform.ghcjsExternsJs}" -O ${optimizationLevel} --jscomp_warning=checkVars --create_source_map="all.js.map" --source_map_format=V3 --js_output_file="all.js" all.unminified.js
+      export JAVA_OPTS='-Xmx4096M -XX:-UseGCOverheadLimit'
+      export DEFAULT_JVM_OPTS='-XX:-UseGCOverheadLimit'
+      ${pkgs.closurecompiler}/bin/closure-compiler --externs "${reflex-platform.ghcjsExternsJs}" -O ${optimizationLevel} --jscomp_warning=checkVars --create_source_map="all.js.map" --source_map_format=V3 --js_output_file="all.js" all.unminified.js
       echo "//# sourceMappingURL=all.js.map" >> all.js
     ''}
   '';
